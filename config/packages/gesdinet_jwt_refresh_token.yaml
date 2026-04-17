@@ -1,0 +1,6 @@
+gesdinet_jwt_refresh_token:
+    refresh_token_class: App\Entity\RefreshToken
+    ttl: 2592000        # 30 j
+    ttl_update: true
+    single_use: true    # rotation → OWASP recommandé
+    manager_type: orm
