@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\Input\CreateTeamInput;
+use App\Dto\Input\UpdateTeamInput;
 use App\Dto\Output\TeamView;
 use App\Entity\Team;
 use App\Entity\TeamMember;
@@ -15,12 +16,10 @@ use App\Security\Voter\TeamVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/teams')]
 final class TeamController extends AbstractController
@@ -72,17 +71,13 @@ final class TeamController extends AbstractController
     #[Route('/{id}', methods: ['PATCH'])]
     public function update(
         Team $team,
-        Request $request,
+        #[MapRequestPayload] UpdateTeamInput $input,
         EntityManagerInterface $em,
         ObjectMapperInterface $objectMapper,
     ): JsonResponse {
         $this->denyAccessUnlessGranted(TeamVoter::EDIT, $team);
 
-        $data = $request->toArray();
-        if (isset($data['name'])) {
-            $team->name = $data['name'];
-        }
-
+        $objectMapper->map($input, $team);
         $em->flush();
 
         return $this->json($objectMapper->map($team, TeamView::class));

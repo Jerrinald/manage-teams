@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Task;
+use App\Entity\Team;
 use App\Enum\TaskStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,6 +28,17 @@ class TaskRepository extends ServiceEntityRepository
             ->andWhere('t.status != :done')
             ->setParameter('now', $now)
             ->setParameter('done', TaskStatus::Done->value)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /** @return list<Task> */
+    public function findByTeam(Team $team): array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.team = :team')
+            ->setParameter('team', $team)
+            ->orderBy('t.dueDate', 'ASC')
             ->getQuery()
             ->getResult();
     }

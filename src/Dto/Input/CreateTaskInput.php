@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Dto\Input;
 
-use App\Enum\TaskStatus;
+use App\Entity\Task;
+use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[Map(target: Task::class)]
 class CreateTaskInput
 {
     #[Assert\NotBlank]
@@ -18,7 +20,7 @@ class CreateTaskInput
     #[Assert\NotBlank]
     public string $dueDate;
 
-    /** UUID de l'assignee (nullable) — résolu en User par le controller */
+    #[Map(if: false)]
     #[Assert\Uuid]
     public ?string $assigneeId = null;
 }

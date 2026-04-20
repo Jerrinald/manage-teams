@@ -60,10 +60,9 @@ class Task
         get => strtoupper($this->title).' ['.$this->status->label().']';
     }
 
-    public function __construct(Team $team, string $title, \DateTimeImmutable|string $dueDate)
+    public function __construct(string $title, \DateTimeImmutable|string $dueDate)
     {
         $this->id = new UuidV7();
-        $this->team = $team;
         $this->title = $title;
         $this->dueDate = $dueDate;
         $this->status = TaskStatus::Todo;
@@ -77,5 +76,10 @@ class Task
     public function getTeam(): Team
     {
         return $this->team;
+    }
+
+    public function setTeam(Team $team): void
+    {
+        $this->team = $team;
     }
 }
