@@ -25,4 +25,14 @@ class BlockedTokenRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function deleteExpired(\DateTimeImmutable $now): int
+    {
+        return (int) $this->createQueryBuilder('b')
+            ->delete()
+            ->where('b.expiresAt < :now')
+            ->setParameter('now', $now)
+            ->getQuery()
+            ->execute();
+    }
 }

@@ -18,6 +18,8 @@ class TaskView
 
     public ?string $description;
 
+    public string $fullTitle;
+
     #[Map(source: 'status', transform: [self::class, 'formatStatus'])]
     public string $status;
 
